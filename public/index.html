@@ -5,6 +5,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="stylesheet" href="/css/main.css">
   <!-- MDL io -->
   <link rel="stylesheet" href="/css/material.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -22,10 +23,13 @@
       <div class="mdl-layout-spacer"></div>
       <!-- Navigation. -->
       <nav class="mdl-navigation">
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
-        <a class="mdl-navigation__link" href="">Link</a>
+      
+        <!-- Accent-colored raised button with ripple -->
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+	        id="sign-in-button">
+          <i class="material-icons">fingerprint</i><span id="sign-in-button-text">Sign in</span>
+        </button>
+	
       </nav>
     </div>
   </header>
