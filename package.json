@@ -1,0 +1,22 @@
+{
+  "name": "markup_web_client",
+  "version": "1.0.0",
+  "description": "Web Client for the Beta Sig markup system.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grbcp5/markup_web_client.git"
+  },
+  "author": "Grant Broadwater",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grbcp5/markup_web_client/issues"
+  },
+  "homepage": "https://github.com/grbcp5/markup_web_client#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
