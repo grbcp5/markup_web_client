@@ -6,6 +6,11 @@
   margin-left: 7px;
 }
 
+.homeLink {
+	color: inherit;
+	text-decoration: none;
+}
+
 .button-container {
 	text-align: center;
 }
