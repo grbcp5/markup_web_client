@@ -206,6 +206,11 @@ var setNavLinks = function( user ) {
         $( "#nav-links" ).append( viewTransLink );
         var launchTerminalLink = $( "<a class='mdl-navigation__link' href='/webTerminal/'>Launch Terminal</a>" );
         $( "#nav-links" ).append( launchTerminalLink );
+        var signOutButton = $( '<div class="button-container"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></div>' );
+        signOutButton.click( function() {
+          firebase.auth().signOut();
+        } );
+        $( "#nav-links" ).append( signOutButton );
 
       } else { /* User is not an admin */
 
@@ -238,9 +243,9 @@ var setNavLinks = function( user ) {
 
   } else {
 
-    var signInLink = $( "<a class='mdl-navigation__link' href='#'>Sign In</a>" );
-    signInLink.click( signInButtonHandler );
-    $( "#nav-links" ).append( signInLink );
+    var signInButton = $( '<div class="button-container"><button class="sign-in-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-in-button-text">Sign In</span></button></div>' );
+    signInButton.click( signInButtonHandler );
+    $( "#nav-links" ).append( signInButton );
 
   }
 
@@ -269,8 +274,8 @@ var setNavLinks = function( user ) {
     console.log( "Current User:" );
     console.log( user );
 
-    $( "#sign-in-button-text" ).text( emailToUsername( user.email ) );
-    $( "#sign-in-button" ).click( function() {
+    $( ".sign-in-button-text" ).text( emailToUsername( user.email ) );
+    $( ".sign-in-button" ).click( function() {
       alert( user.displayName + " already signed in." );
     } );
     setRedirectResultCallback();
@@ -279,7 +284,8 @@ var setNavLinks = function( user ) {
 
     console.log( "No user signed in" );
 
-    $( "#sign-in-button" ).click( signInButtonHandler );
+    $( ".sign-in-button-text" ).text( "Sign In" );
+    $( ".sign-in-button" ).click( signInButtonHandler );
 
   }
 
