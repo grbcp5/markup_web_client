@@ -12,5 +12,26 @@
 }
 
 .button-container {
-	text-align: center;
+
+}
+
+.mdl-cell {
+	
+}
+
+.cell-container {
+	width: 75%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.direct-content-cell {
+	box-shadow: 2px 2px 5px #888888;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+}
+
+.mdl-grid {
+	justify-content: center;
 }

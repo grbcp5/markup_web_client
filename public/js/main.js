@@ -223,7 +223,9 @@ var setNavLinks = function( user ) {
 
             /* Show Member Links */
             var viewTransLink = $( "<a class='mdl-navigation__link' href='/transactions/'>Transactions</a>" );
-            $( "#nav-links" ).append( viewTransLink );  
+            $( "#nav-links" ).append( viewTransLink );
+            var viewProducts = $( "<a class='mdl-navigation__link' href='/products/'>Products</a>" );
+            $( "#nav-links" ).append( viewProducts );  
 
           } else { /* User is not a member */
 
