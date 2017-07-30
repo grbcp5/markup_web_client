@@ -1,6 +1,24 @@
 /*****************************************************************************
  * 
  * Function:
+ *   documentReady
+ * 
+ * Parameters:
+ *   none
+ * 
+ * Description:
+ *   Callback for when the document is fully loaded.
+ * 
+ *****************************************************************************/
+
+var documentReady = function() {
+  $( "#loading-screen" ).show();
+}
+$( document ).ready( documentReady );
+
+/*****************************************************************************
+ * 
+ * Function:
  *   onFirebaseAuthStateChanged
  * 
  * Parameters:
@@ -24,6 +42,7 @@
       if( userAdminSnap.exists() ) {
 
         populateMemberList( user );
+        $( "#loading-screen" ).hide();
 
       } else { /* User is not an admin */
         alert( "You must be a markup admin to manage registered members." );

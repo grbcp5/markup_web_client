@@ -159,7 +159,7 @@ var signInButtonHandler = function() {
  *****************************************************************************/
 
 var documentReady = function() {
-
+  $( "#loading-screen" ).hide();
 }
 $( document ).ready( documentReady );
 
