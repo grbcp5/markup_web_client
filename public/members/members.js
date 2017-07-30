@@ -58,7 +58,7 @@ firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged_MembersPage );
 var changeAdminStatus = function( memberContext, checkContext ) {
 
   var userSelection 
-    = confirm( "Are you sure you want to change " + memberContext.name + "'s member status from " + 
+    = confirm( "Are you sure you want to change " + memberContext.name + "'s admin status from " + 
                memberContext.isAdmin + " to " + $( "#" + memberContext.checkID ).prop('checked') + "?" );
 
     if( userSelection ) {
