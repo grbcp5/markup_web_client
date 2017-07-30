@@ -20,6 +20,8 @@ provider.setCustomParameters( {
   'login_hint': 'Use your @mst.edu email'
 } );
 
+var loadingContent = false;
+
 
 /*****************************************************************************
  * 
@@ -159,7 +161,7 @@ var signInButtonHandler = function() {
  *****************************************************************************/
 
 var documentReady = function() {
-  $( "#loading-screen" ).hide();
+  
 }
 $( document ).ready( documentReady );
 
@@ -209,6 +211,7 @@ var setNavLinks = function( user ) {
         var signOutButton = $( '<div class="button-container"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></div>' );
         signOutButton.click( function() {
           firebase.auth().signOut();
+          window.location.reload();
         } );
         $( "#nav-links" ).append( signOutButton );
 
@@ -289,6 +292,10 @@ var setNavLinks = function( user ) {
     $( ".sign-in-button-text" ).text( "Sign In" );
     $( ".sign-in-button" ).click( signInButtonHandler );
 
+  }
+
+  if( !loadingContent ) {
+    $( "#loading-screen" ).hide();
   }
 
 }

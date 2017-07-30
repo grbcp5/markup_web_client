@@ -12,7 +12,7 @@
  *****************************************************************************/
 
 var documentReady = function() {
-  $( "#loading-screen" ).show();
+  loadingContent = true;
 }
 $( document ).ready( documentReady );
 
@@ -52,6 +52,9 @@ $( document ).ready( documentReady );
     } );
 
   } else {
+
+    alert( "You must be a markup admin to manage registered members." );
+    window.location.replace( "/" );
 
   }
 
