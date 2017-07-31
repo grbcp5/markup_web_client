@@ -43,6 +43,7 @@ $( document ).ready( documentReady );
 
         populateMemberList( user );
         $( "#loading-screen" ).hide();
+        $( "#add-member-button" ).click( addMemberButtonHandler );
 
       } else { /* User is not an admin */
         alert( "You must be a markup admin to manage registered members." );
@@ -60,6 +61,98 @@ $( document ).ready( documentReady );
 
 }
 firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged_MembersPage );
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   addMemberButtonHandler
+ * 
+ * Parameters:
+ *   none
+ * 
+ * Description:
+ *   Handles event when user clicks the "Add Member" button
+ * 
+ *****************************************************************************/
+
+var addMemberButtonHandler = function() {
+  var fName = prompt( "Please enter the new member's:\n\nFirst Name", "" );
+  
+  if( fName == null )
+    return;
+
+  var lName = prompt( "Please enter the new member's:\n\nLast Name", "" );
+  
+  if( lName == null )
+    return;
+
+  var username = prompt( "Please enter the new member's:\n\nSchool Username (without @mst.edu)", "" );
+  
+  if( username == null )
+    return;
+
+  var id = prompt( "Please enter the new member's:\n\nStudent ID", "" );
+  
+  if( id == null )
+    return;
+
+  var shouldAdd = confirm( "Are you sure you want to add the following user?\n\n" +
+                           fName + " " + lName + "\n" +
+                           "username: " + username + "\n" +
+                           "student id: " + id );
+
+  if( !shouldAdd )
+    return;
+
+  var newMemberData = {
+    "name": {
+      "first": fName,
+      "last": lName
+    },
+    "school": {
+      "id": id,
+      "username": username
+    }
+  }
+
+  var newMemberPath = "/members/" + username;
+  var newMemberRef = ref.child( newMemberPath );
+  newMemberRef.once( "value", function( newMemberSnap ) {
+
+    if( !newMemberSnap.exists() ) {
+   
+      var memberUsernamePath = "/members/usernames/" + id;
+      var memberUsernameRef = ref.child( memberUsernamePath );
+      memberUsernameRef.once( "value", function( memberUsernameSnap ) {
+
+        if( !memberUsernameSnap.exists() ) {
+          var changes = {};
+
+          changes[ '/members/' + username ] = newMemberData;
+          changes[ '/members/usernames/' + id ] = username;
+
+          ref.update( changes );
+
+          location.reload();
+
+        } else { /* /members/usernames/*id* already exists */
+
+          alert( "Cannot add user because a user with that student id already exists" );
+
+        }
+
+      } );
+
+    } else { /* /members/*username* already exists */
+
+      alert( "Cannot add user because a user with that username already exists" );
+
+    }
+
+  } ); // newMemberRef.once
+
+}
 
 
 /*****************************************************************************
@@ -97,6 +190,20 @@ var changeAdminStatus = function( memberContext ) {
     }
 
 }
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   clearMemberHandler
+ * 
+ * Parameters:
+ *   memberContext - Relevant data pertaining to the member who is up for 
+ *                   removal.
+ * 
+ * Description:
+ *   Handles evnet when user clicks the clear button.
+ * 
+ *****************************************************************************/
 
 var clearMemberHandler = function( memberContext ) {
   confirm( "Are you sure you want to remove " + memberContext.name + " as a member?" );
