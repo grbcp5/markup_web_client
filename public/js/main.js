@@ -208,7 +208,7 @@ var setNavLinks = function( user ) {
         $( "#nav-links" ).append( viewTransLink );
         var launchTerminalLink = $( "<a class='mdl-navigation__link' href='/webTerminal/'>Launch Terminal</a>" );
         $( "#nav-links" ).append( launchTerminalLink );
-        var signOutButton = $( '<div class="button-container"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></div>' );
+        var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
         signOutButton.click( function() {
           firebase.auth().signOut();
           window.location.reload();
@@ -229,6 +229,12 @@ var setNavLinks = function( user ) {
             $( "#nav-links" ).append( viewTransLink );
             var viewProducts = $( "<a class='mdl-navigation__link' href='/products/'>Products</a>" );
             $( "#nav-links" ).append( viewProducts );  
+            var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
+            signOutButton.click( function() {
+              firebase.auth().signOut();
+              window.location.reload();
+            } );
+            $( "#nav-links" ).append( signOutButton );
 
           } else { /* User is not a member */
 
