@@ -77,7 +77,7 @@ firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged_MembersPage );
  * 
  *****************************************************************************/
 
-var changeAdminStatus = function( memberContext, checkContext ) {
+var changeAdminStatus = function( memberContext ) {
 
   var userSelection 
     = confirm( "Are you sure you want to change " + memberContext.name + "'s admin status from " + 
@@ -97,6 +97,10 @@ var changeAdminStatus = function( memberContext, checkContext ) {
     }
 
 }
+
+var clearMemberHandler = function( memberContext ) {
+  confirm( "Are you sure you want to remove " + memberContext.name + " as a member?" );
+} 
 
 /*****************************************************************************
  * 
@@ -133,6 +137,7 @@ var populateMemberList = function( currentUser ) {
         checkID: memberSnap.val().school.username + "Check",
         labelID: memberSnap.val().school.username + "Label"
       }
+      var clearID = memberSnap.val().school.username + "Clear";
       var checkVal = ( memberContext.isAdmin ) ? "Checked" : "";
       var isAdminStr = "Is Markup Admin";
       var isNotAdminStr = "Is Not Markup Admin";
@@ -141,9 +146,10 @@ var populateMemberList = function( currentUser ) {
       var memberDiv = $(
         '<div class="mdl-cell mdl-cell--6-col">' +
           '<div class="cell-container direct-content-cell">' +
-        '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="' + memberContext.checkID +'" id="' + memberContext.labelID + '">' +
+            '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="' + memberContext.checkID +'" id="' + memberContext.labelID + '">' +
               '<input type="checkbox" id="' + memberContext.checkID + '" class="mdl-checkbox__input" ' + checkVal + '>' +
               '<span class="mdl-checkbox__label">' + memberContext.name + '</span>' +
+              '<button class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored" style="float: right;" id="' + clearID + '"><i class="material-icons">clear</i></button>' +
             '</label>' +
             '<div class="mdl-tooltip" data-mdl-for="' + memberContext.labelID + '">' +
               ( ( memberContext.isAdmin ) ? isAdminStr : isNotAdminStr ) +
@@ -157,11 +163,17 @@ var populateMemberList = function( currentUser ) {
           return false;
         }
       } );
+
       memberDiv.insertBefore( $( "#membersPlacehoder" ) );
 
       if( emailToUsername( currentUser.email ) === memberContext.username ) {
         $( "#" + memberContext.checkID ).prop( "disabled", true );
+        $( "#" + clearID ).prop( "disabled", true );
       }
+
+      $( "#" + clearID ).click( function() {
+        clearMemberHandler( memberContext );
+      } );
 
     } );
 
