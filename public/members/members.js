@@ -206,7 +206,22 @@ var changeAdminStatus = function( memberContext ) {
  *****************************************************************************/
 
 var clearMemberHandler = function( memberContext ) {
-  confirm( "Are you sure you want to remove " + memberContext.name + " as a member?" );
+  
+  var shouldDelete = confirm( "Are you sure you want to remove " + memberContext.name + " as a member?" );
+
+  if( !shouldDelete ) {
+    return;
+  }
+
+  var changes = {};
+
+  changes[ "/members/" + memberContext.username ] = null;
+  changes[ "/members/usernames/" + memberContext.id ] = null;
+  changes[ "/markup/admin/" + memberContext.username ] = null;
+
+  ref.update( changes );
+
+  location.reload();
 } 
 
 /*****************************************************************************
@@ -239,6 +254,7 @@ var populateMemberList = function( currentUser ) {
       
       var memberContext = {
         username: memberSnap.val().school.username,
+        id: memberSnap.val().school.id,
         name: memberSnap.val().name.first + " " + memberSnap.val().name.last,
         isAdmin: memberSnap.val().markup ? ( ( memberSnap.val().markup.admin ) ? true : false ) : false,
         checkID: memberSnap.val().school.username + "Check",
