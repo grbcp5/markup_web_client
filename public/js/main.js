@@ -22,6 +22,25 @@ provider.setCustomParameters( {
 
 var loadingContent = false;
 
+var userAdminStates = {
+  INVALID: -1,
+
+  NONAUTH: 0,
+  NONMEMBER: 1,
+  MEMBER: 2,
+  ADMIN: 3,
+
+  NUMADMINSTATES: 4,
+
+  toString: [ "Non-Auth", "Non-Member", "Member", "Admin" ]
+};
+var adminStatusDependentFunctions = [
+  [],
+  [],
+  [],
+  []
+];
+var identifiedCurrentUser = null;
 
 /*****************************************************************************
  * 
@@ -169,19 +188,133 @@ $( document ).ready( documentReady );
 /*****************************************************************************
  * 
  * Function:
- *   setNavLinks
+ *   setAdminNavLinks
  * 
  * Parameters:
  *   user - Currently authenticated user (or null).
  * 
  * Description:
- *   Dynamically sets the navigation links depending on the current user.
+ *   Dynamically sets the navigation links for an administrator.
  * 
  *****************************************************************************/
 
-var setNavLinks = function( user ) {
+var setAdminNavLinks = function( user ) {
 
+  /* Remove any existing links */
   $( "#nav-links" ).empty();
+
+  /* Show Admin Links */
+  var viewMembersLink = $( "<a class='mdl-navigation__link' href='/members/'>Members</a>" );
+  $( "#nav-links" ).append( viewMembersLink );
+  var viewProductsLink = $( "<a class='mdl-navigation__link' href='/products/'>Products</a>" );
+  $( "#nav-links" ).append( viewProductsLink );
+  var viewTransLink = $( "<a class='mdl-navigation__link' href='/transactions/'>Transactions</a>" );
+  $( "#nav-links" ).append( viewTransLink );
+  var launchTerminalLink = $( "<a class='mdl-navigation__link' href='/webTerminal/'>Launch Terminal</a>" );
+  $( "#nav-links" ).append( launchTerminalLink );
+  var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
+  signOutButton.click( function() {
+    firebase.auth().signOut();
+    window.location.reload();
+  } );
+  $( "#nav-links" ).append( signOutButton );
+
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   setMemberNavLinks
+ * 
+ * Parameters:
+ *   user - Currently authenticated user (or null).
+ * 
+ * Description:
+ *   Dynamically sets the navigation links for a member.
+ * 
+ *****************************************************************************/
+
+var setMemberNavLinks = function( user ) {
+
+  /* Remove any existing links */
+  $( "#nav-links" ).empty();
+
+  /* Show Member Links */
+  var viewTransLink = $( "<a class='mdl-navigation__link' href='/transactions/'>Transactions</a>" );
+  $( "#nav-links" ).append( viewTransLink );
+  var viewProducts = $( "<a class='mdl-navigation__link' href='/products/'>Products</a>" );
+  $( "#nav-links" ).append( viewProducts );  
+  var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
+  signOutButton.click( function() {
+    firebase.auth().signOut();
+    window.location.reload();
+  } );
+  $( "#nav-links" ).append( signOutButton );
+
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   signOutNonMember
+ * 
+ * Parameters:
+ *   user - Currently authenticated user (or null).
+ * 
+ * Description:
+ *   Sign out user if they are not a member.
+ * 
+ *****************************************************************************/
+
+var signOutNonMember = function( user ) {
+
+  alert( "You are not currently registered to use the markup System.\n\n"
+         + "Please contact the markup chair to register." );
+  firebase.auth().signOut();
+
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   signOutNonMember
+ * 
+ * Parameters:
+ *   user - Currently authenticated user (or null).
+ * 
+ * Description:
+ *   Sign out user if they are not a member.
+ * 
+ *****************************************************************************/
+
+var setLinksForNullAuthUsers = function() {
+
+  var signInButton = $( '<div class="button-container"><button class="sign-in-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-in-button-text">Sign In</span></button></div>' );
+  signInButton.click( signInButtonHandler );
+  $( "#nav-links" ).append( signInButton );
+
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   identifyUser
+ * 
+ * Parameters:
+ *   user - Currently authenticated user (or null).
+ * 
+ * Description:
+ *   Identifies the users admin state.
+ * 
+ *****************************************************************************/
+
+var identifyUser = function( user ) {
+
+  identifiedUser = false;
 
   if( user ) {
 
@@ -196,24 +329,16 @@ var setNavLinks = function( user ) {
     var userAdminRef = ref.child( userAdminPath );
     userAdminRef.once( "value", function( userAdminSnap ) {
 
+      this.currentUser = {
+        username: userUsername,
+        authValue: user,
+        adminStatus: userAdminStates.INVALID
+      }
+
       /* If user is an admin */
       if( userAdminSnap.val() ) {
 
-        /* Show Admin Links */
-        var viewMembersLink = $( "<a class='mdl-navigation__link' href='/members/'>Members</a>" );
-        $( "#nav-links" ).append( viewMembersLink );
-        var viewProductsLink = $( "<a class='mdl-navigation__link' href='/products/'>Products</a>" );
-        $( "#nav-links" ).append( viewProductsLink );
-        var viewTransLink = $( "<a class='mdl-navigation__link' href='/transactions/'>Transactions</a>" );
-        $( "#nav-links" ).append( viewTransLink );
-        var launchTerminalLink = $( "<a class='mdl-navigation__link' href='/webTerminal/'>Launch Terminal</a>" );
-        $( "#nav-links" ).append( launchTerminalLink );
-        var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
-        signOutButton.click( function() {
-          firebase.auth().signOut();
-          window.location.reload();
-        } );
-        $( "#nav-links" ).append( signOutButton );
+        this.currentUser.adminStatus = userAdminStates.ADMIN;
 
       } else { /* User is not an admin */
 
@@ -224,44 +349,148 @@ var setNavLinks = function( user ) {
           /* User is a member */
           if( userMemberSnap.val() ) {
 
-            /* Show Member Links */
-            var viewTransLink = $( "<a class='mdl-navigation__link' href='/transactions/'>Transactions</a>" );
-            $( "#nav-links" ).append( viewTransLink );
-            var viewProducts = $( "<a class='mdl-navigation__link' href='/products/'>Products</a>" );
-            $( "#nav-links" ).append( viewProducts );  
-            var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
-            signOutButton.click( function() {
-              firebase.auth().signOut();
-              window.location.reload();
-            } );
-            $( "#nav-links" ).append( signOutButton );
+            this.currentUser.adminStatus = userAdminStates.MEMBER;
 
           } else { /* User is not a member */
 
-            /* Notify & boot user */
-            // TODO: Move to a more appropriate location
-            alert( "You are not currently registered to use the markup System.\n\n"
-                   + "Please contact the markup chair to register." );
-            firebase.auth().signOut();
+            this.currentUser.adminStatus = userAdminStates.NONMEMBER;
 
           } /* If user is a member */
 
-        } ); /* userMemberRef.once */
+        } ).then( identifiedUserCallback ); /* userMemberRef.once */
 
       } /* if user is admin */
 
-    } ); /* userAdminRef.once */
+    } ).then( identifiedUserCallback ); /* userAdminRef.once */
 
-  } else {
+  } else { /* No user signed in */
 
-    var signInButton = $( '<div class="button-container"><button class="sign-in-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-in-button-text">Sign In</span></button></div>' );
-    signInButton.click( signInButtonHandler );
-    $( "#nav-links" ).append( signInButton );
+    this.currentUser.adminStatus = userAdminStates.NONAUTH;
 
   }
 
 }
 
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   identifiedUserCallback
+ * 
+ * Parameters:
+ *   none
+ * 
+ * Description:
+ *   Called once the users admin status has been identified.
+ * 
+ *****************************************************************************/
+
+var identifiedUserCallback = function() {
+
+  /* Prevents overwrite if user has already been identified */
+  if( identifiedCurrentUser ) {
+    return;
+  }
+
+  console.log( "Identified '" + this.currentUser.username + "' as " + userAdminStates.toString[ this.currentUser.adminStatus ] );
+
+  identifiedCurrentUser = this.currentUser;
+  executeAdminStatusDependentFunctions( this.currentUser );
+
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   executeAdminStatusDependentFunctions
+ * 
+ * Parameters:
+ *   currentUser = {
+ *     username - Current User's username
+ *     adminStatus - Current User's admin status
+ *     authValue - the auth object provided by firebase
+ *   }
+ * 
+ * Description:
+ *   Executes all of the currently queued admin status dependent functions.
+ * 
+ *****************************************************************************/
+
+var executeAdminStatusDependentFunctions = function( currentUser ) {
+
+  var funcs = adminStatusDependentFunctions[ currentUser.adminStatus ];
+
+  for( var i = 0; i < funcs.length; i++ ) {
+    funcs[ i ]( currentUser );
+  }
+
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   queueAdminStatusDependentFunction
+ * 
+ * Parameters:
+ *   executionKey - Indicates which admin states to execute the callback for
+ *   callback - funciton to be executed
+ * 
+ * Description:
+ *   Executes callback as soon as possible for indicated admin states. 
+ * 
+ *****************************************************************************/
+
+var queueAdminStatusDependentFunction = function( executionKey, callback ) {
+
+  /* Loop through each possible state */
+  for( var i = 0; i < userAdminStates.NUMADMINSTATES; i++ ) {
+
+    /* If the callback is meant to execute for the current state *//* Footnote 1 */
+    if( executionKey & ( 1 << i ) ) {
+
+      /* Add to queue or execute imeadiately *//* Footnote 2 */
+      if( executeOrQueue( i, callback ) ) {
+        return;
+      }
+    }
+  }
+}
+
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   executeOrQueue
+ * 
+ * Parameters:
+ *   adminState - Index of queue
+ *   callback - function to execute
+ * 
+ * Description:
+ *   Executes callback as soon as users admin status is identified. Returns
+ *   true if the callback is set to execute directly or false if the callback
+ *   is queued to execute when the user is identified.
+ * 
+ *****************************************************************************/
+
+var executeOrQueue = function( adminState, callback ) {
+
+  /* User already identified and callback is ready to execute */
+  if( identifiedCurrentUser ) {
+
+    setTimeout( callback, 0, identifiedCurrentUser );
+    return true;
+
+  } else { /* User is yet to be identified and callback should be queued for later */
+
+    adminStatusDependentFunctions[ adminState ].push( callback );
+    return false;
+
+  }
+
+}
 
 /*****************************************************************************
  * 
@@ -278,7 +507,11 @@ var setNavLinks = function( user ) {
 
  var onFirebaseAuthStateChanged = function( user ) {
 
-  setNavLinks( user );
+  setTimeout( identifyUser, 0, user );
+  queueAdminStatusDependentFunction( ( 1 << userAdminStates.ADMIN ), setAdminNavLinks );
+  queueAdminStatusDependentFunction( ( 1 << userAdminStates.MEMBER ), setMemberNavLinks );
+  queueAdminStatusDependentFunction( ( 1 << userAdminStates.NONMEMBER ), signOutNonMember );
+  queueAdminStatusDependentFunction( ( 1 << userAdminStates.NONAUTH ), setLinksForNullAuthUsers );
 
   if( user ) {
 
@@ -306,3 +539,29 @@ var setNavLinks = function( user ) {
 
 }
 firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged );
+
+/*****************************************************************************
+
+FOOTNOTES
+
+queueAdminStatusDependentFunction
+
+  1: executionKey & ( 1 << i )
+
+    The execution key is desined so that way it can be defined to execute for 
+    more than just one state. To do this, each bit represents a boolean value
+    on if it should be executed for a given admin state. For example, if a 
+    callback is to be executed for the Admin ( 3 ), and Member ( 2 ) state the 
+    3rd and 2nd bit would be set. Thus the statement referencing this footnote
+    is doing a check on each bit of the execution key to see if it is set to be
+    executed for the current admin state.
+  
+  2: if( executeOrQueue( i, callback ) ) { return; }
+
+    executeOrQueue returns true if the callback was set to executed directly,
+    false otherwise. If the statement was already executed and the executionKey
+    includes more than one state, the callback will execute again on the next
+    set state. To avoid this, the fuction simply terminates if the callback 
+    is set to execute directly.
+
+******************************************************************************/
