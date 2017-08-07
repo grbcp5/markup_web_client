@@ -12,7 +12,8 @@
  *****************************************************************************/
 
 var userAdminStates = {
-  INVALID: -1,
+  INVALID: -2,
+  INTERMEDIATE: -1,
 
   NONAUTH: 0,
   NONMEMBER: 1,
@@ -75,6 +76,8 @@ var identifyUser = function( user ) {
         this.currentUser.adminStatus = userAdminStates.ADMIN;
 
       } else { /* User is not an admin */
+
+        this.currentUser.adminStatus = userAdminStates.INTERMEDIATE;
 
         var userMemberPath = "/members/" + userUsername;
         var userMemberRef = ref.child( userMemberPath );
@@ -141,6 +144,14 @@ var identifiedUserCallback = function() {
     identifiedCurrentUser = null;
 
   } else { /* If there is a current user */
+
+    if( this.currentUser.adminStatus === userAdminStates.INTERMEDIATE ) {
+      return;
+    }
+
+    if( this.currentUser.adminStatus === userAdminStates.INVALID ) {
+      throw "An invalid admin status occured";
+    }
 
     console.log( "Identified '" + this.currentUser.username + "' as " + userAdminStates.toString[ this.currentUser.adminStatus ] );
 

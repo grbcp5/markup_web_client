@@ -42,11 +42,11 @@ var loadOtherScripts = function() {
   $support = $( '<script src="/js/support.js"></script>' );
   $support.insertBefore( $( '#other_scripts' ) );
   
-  $adminStatusDependentFramework = $( '<script src="/js/adminStatusDependentFramework.js"></script>' );
-  $adminStatusDependentFramework.insertBefore( $( '#other_scripts' ) );
+  // $adminStatusDependentFramework = $( '<script src="/js/adminStatusDependentFramework.js"></script>' );
+  // $adminStatusDependentFramework.insertBefore( $( '#other_scripts' ) );
 
-  $navigation = $( '<script src="/js/navigation.js"></script>' );
-  $navigation.insertBefore( $( '#other_scripts' ) );
+  // $navigation = $( '<script src="/js/navigation.js"></script>' );
+  // $navigation.insertBefore( $( '#other_scripts' ) );
 
 }
 loadOtherScripts();
