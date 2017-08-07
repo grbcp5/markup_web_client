@@ -314,8 +314,6 @@ var setLinksForNullAuthUsers = function() {
 
 var identifyUser = function( user ) {
 
-  identifiedUser = false;
-
   if( user ) {
 
     /*
@@ -365,7 +363,7 @@ var identifyUser = function( user ) {
 
   } else { /* No user signed in */
 
-    this.currentUser.adminStatus = userAdminStates.NONAUTH;
+    identifiedUserCallback();
 
   }
 
@@ -392,10 +390,27 @@ var identifiedUserCallback = function() {
     return;
   }
 
-  console.log( "Identified '" + this.currentUser.username + "' as " + userAdminStates.toString[ this.currentUser.adminStatus ] );
+  var currentIdentifiedUser = {
 
-  identifiedCurrentUser = this.currentUser;
-  executeAdminStatusDependentFunctions( this.currentUser );
+  };
+
+  /* If no current user */
+  if( this.currentUser == null ) {
+
+    currentIdentifiedUser.username = null;
+    currentIdentifiedUser.authValue = null;
+    currentIdentifiedUser.adminStatus = userAdminStates.NONAUTH;
+
+    identifiedCurrentUser = null;
+
+  } else { /* If there is a current user */
+
+    console.log( "Identified '" + this.currentUser.username + "' as " + userAdminStates.toString[ this.currentUser.adminStatus ] );
+
+    identifiedCurrentUser = this.currentUser;
+  }
+
+  executeAdminStatusDependentFunctions( currentIdentifiedUser );
 
 }
 
@@ -512,6 +527,7 @@ var executeOrQueue = function( adminState, callback ) {
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.MEMBER ), setMemberNavLinks );
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.NONMEMBER ), signOutNonMember );
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.NONAUTH ), setLinksForNullAuthUsers );
+
 
   if( user ) {
 
