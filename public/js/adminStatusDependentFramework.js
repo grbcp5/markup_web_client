@@ -1,3 +1,23 @@
+var userAdminStates = {
+  INVALID: -1,
+
+  NONAUTH: 0,
+  NONMEMBER: 1,
+  MEMBER: 2,
+  ADMIN: 3,
+
+  NUMADMINSTATES: 4,
+
+  toString: [ "Non-Auth", "Non-Member", "Member", "Admin" ]
+};
+var adminStatusDependentFunctions = [
+  [],
+  [],
+  [],
+  []
+];
+var identifiedCurrentUser = null;
+
 /*****************************************************************************
  * 
  * Function:
@@ -207,3 +227,30 @@ var executeOrQueue = function( adminState, callback ) {
   }
 
 }
+
+
+/*****************************************************************************
+
+FOOTNOTES
+
+queueAdminStatusDependentFunction
+
+  1: executionKey & ( 1 << i )
+
+    The execution key is desined so that way it can be defined to execute for 
+    more than just one state. To do this, each bit represents a boolean value
+    on if it should be executed for a given admin state. For example, if a 
+    callback is to be executed for the Admin ( 3 ), and Member ( 2 ) state the 
+    3rd and 2nd bit would be set. Thus the statement referencing this footnote
+    is doing a check on each bit of the execution key to see if it is set to be
+    executed for the current admin state.
+  
+  2: if( executeOrQueue( i, callback ) ) { return; }
+
+    executeOrQueue returns true if the callback was set to executed directly,
+    false otherwise. If the statement was already executed and the executionKey
+    includes more than one state, the callback will execute again on the next
+    set state. To avoid this, the fuction simply terminates if the callback 
+    is set to execute directly.
+
+******************************************************************************/
