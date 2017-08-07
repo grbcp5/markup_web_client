@@ -24,6 +24,40 @@ provider.setCustomParameters( {
 /*****************************************************************************
  * 
  * Function:
+ *   loadOtherScripts
+ * 
+ * Parameters:
+ *   none
+ * 
+ * Description:
+ *   Loads all necisary scripts.
+ * 
+ *****************************************************************************/
+
+var loadOtherScripts = function() {
+
+  $loading = $( '<script src="/js/loading.js"></script>' );
+  $loading.insertBefore( $( '#other_scripts' ) );
+
+  $support = $( '<script src="/js/support.js"></script>' );
+  $support.insertBefore( $( '#other_scripts' ) );
+  
+  $adminStatusDependentFramework = $( '<script src="/js/adminStatusDependentFramework.js"></script>' );
+  $adminStatusDependentFramework.insertBefore( $( '#other_scripts' ) );
+
+  $navigation = $( '<script src="/js/navigation.js"></script>' );
+  $navigation.insertBefore( $( '#other_scripts' ) );
+
+}
+loadOtherScripts();
+
+
+startLoadingProcess( adminIdentificationLoadingProcessKey );
+
+
+/*****************************************************************************
+ * 
+ * Function:
  *   redirectResultCallback
  * 
  * Parameters:
@@ -109,37 +143,6 @@ var getUserRefForID = function( student_id, callback ) {
 /*****************************************************************************
  * 
  * Function:
- *   loadOtherScripts
- * 
- * Parameters:
- *   none
- * 
- * Description:
- *   Loads all necisary scripts.
- * 
- *****************************************************************************/
-
-var loadOtherScripts = function() {
-
-  $loading = $( '<script src="/js/loading.js"></script>' );
-  $loading.insertBefore( $( '#other_scripts' ) );
-
-  $support = $( '<script src="/js/support.js"></script>' );
-  $support.insertBefore( $( '#other_scripts' ) );
-  
-  $adminStatusDependentFramework = $( '<script src="/js/adminStatusDependentFramework.js"></script>' );
-  $adminStatusDependentFramework.insertBefore( $( '#other_scripts' ) );
-
-  $navigation = $( '<script src="/js/navigation.js"></script>' );
-  $navigation.insertBefore( $( '#other_scripts' ) );
-
-}
-loadOtherScripts();
-
-
-/*****************************************************************************
- * 
- * Function:
  *   documentReady
  * 
  * Parameters:
@@ -176,11 +179,6 @@ $( document ).ready( documentReady );
 
   /* Identify the current user */
   identifyUser( user );
-
-  /* Terminate the loading screen */
-  if( !loadingContent ) {
-    $( "#loading-screen" ).hide();
-  }
 
 }
 firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged );

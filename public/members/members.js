@@ -1,3 +1,6 @@
+var memberLoadingProcessKey = "MemberPage";
+startLoadingProcess( memberLoadingProcessKey );
+
 /*****************************************************************************
  * 
  * Function:
@@ -12,7 +15,7 @@
  *****************************************************************************/
 
 var documentReady = function() {
-  loadingContent = true;
+
 }
 $( document ).ready( documentReady );
 
@@ -303,13 +306,6 @@ var populateMemberList = function( currentUser ) {
 
   } ); 
 
+  terminateLoadingProcess( memberLoadingProcessKey );
+
 }
-
-
-
-
-
-
-
-
-

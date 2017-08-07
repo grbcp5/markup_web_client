@@ -31,6 +31,8 @@ var adminStatusDependentFunctions = [
 ];
 var identifiedCurrentUser = null;
 
+var adminIdentificationLoadingProcessKey = "AdminIdentification";
+
 /*****************************************************************************
  * 
  * Function:
@@ -45,6 +47,8 @@ var identifiedCurrentUser = null;
  *****************************************************************************/
 
 var identifyUser = function( user ) {
+
+  local_currentUser = null;
 
   if( user ) {
 
@@ -123,16 +127,16 @@ var identifiedUserCallback = function() {
   }
 
   /* Cannot user identifiedCurrentUser because that value must be set to null when no current user */
-  var currentIdentifiedUser = {
+  var local_currentUser = {
 
   };
 
   /* If no current user */
   if( this.currentUser == null ) {
 
-    currentIdentifiedUser.username = null;
-    currentIdentifiedUser.authValue = null;
-    currentIdentifiedUser.adminStatus = userAdminStates.NONAUTH;
+    local_currentUser.username = null;
+    local_currentUser.authValue = null;
+    local_currentUser.adminStatus = userAdminStates.NONAUTH;
 
     identifiedCurrentUser = null;
 
@@ -141,10 +145,10 @@ var identifiedUserCallback = function() {
     console.log( "Identified '" + this.currentUser.username + "' as " + userAdminStates.toString[ this.currentUser.adminStatus ] );
 
     identifiedCurrentUser = this.currentUser;
-    currentIdentifiedUser = this.currentUser;
+    local_currentUser = this.currentUser;
   }
 
-  executeAdminStatusDependentFunctions( currentIdentifiedUser );
+  executeAdminStatusDependentFunctions( local_currentUser );
 
 }
 
@@ -173,6 +177,8 @@ var executeAdminStatusDependentFunctions = function( currentUser ) {
   for( var i = 0; i < funcs.length; i++ ) {
     funcs[ i ]( currentUser );
   }
+
+  terminateLoadingProcess( adminIdentificationLoadingProcessKey );
 
 }
 
