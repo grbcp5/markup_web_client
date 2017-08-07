@@ -1,3 +1,16 @@
+/*****************************************************************************
+ * 
+ * File: 
+ *   /js/adminStatusDependentFramework.js
+ *
+ * Original Author:
+ *   Grant Broadwater
+ *
+ * Description:
+ *   Provides support for making admin status dependent function calls.
+ *
+ *****************************************************************************/
+
 var userAdminStates = {
   INVALID: -1,
 

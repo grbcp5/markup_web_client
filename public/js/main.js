@@ -20,8 +20,6 @@ provider.setCustomParameters( {
   'login_hint': 'Use your @mst.edu email'
 } );
 
-var loadingContent = false;
-
 
 /*****************************************************************************
  * 
@@ -122,6 +120,9 @@ var getUserRefForID = function( student_id, callback ) {
  *****************************************************************************/
 
 var loadOtherScripts = function() {
+
+  $loading = $( '<script src="/js/loading.js"></script>' );
+  $loading.insertBefore( $( '#other_scripts' ) );
 
   $support = $( '<script src="/js/support.js"></script>' );
   $support.insertBefore( $( '#other_scripts' ) );
