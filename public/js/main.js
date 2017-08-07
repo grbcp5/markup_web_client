@@ -390,6 +390,7 @@ var identifiedUserCallback = function() {
     return;
   }
 
+  /* Cannot user identifiedCurrentUser because that value must be set to null when no current user */
   var currentIdentifiedUser = {
 
   };
@@ -408,6 +409,7 @@ var identifiedUserCallback = function() {
     console.log( "Identified '" + this.currentUser.username + "' as " + userAdminStates.toString[ this.currentUser.adminStatus ] );
 
     identifiedCurrentUser = this.currentUser;
+    currentIdentifiedUser = this.currentUser;
   }
 
   executeAdminStatusDependentFunctions( currentIdentifiedUser );
@@ -507,6 +509,35 @@ var executeOrQueue = function( adminState, callback ) {
 
 }
 
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   setSignInButtonForUser
+ * 
+ * Parameters:
+ *   currentUser = {
+ *     username - Current User's username
+ *     adminStatus - Current User's admin status
+ *     authValue - the auth object provided by firebase
+ *   }
+ * 
+ * Description:
+ *   Sets the sign in button for the current user.
+ * 
+ *****************************************************************************/
+
+var setSignInButtonForUser = function( currentUser ) {
+
+  $( ".sign-in-button-text" ).text( emailToUsername( currentUser.authValue.email ) );
+    $( ".sign-in-button" ).click( function() {
+      alert( currentUser.authValue.displayName + " already signed in." );
+    } );
+    setRedirectResultCallback();
+
+}
+
+
 /*****************************************************************************
  * 
  * Function:
@@ -523,22 +554,18 @@ var executeOrQueue = function( adminState, callback ) {
  var onFirebaseAuthStateChanged = function( user ) {
 
   setTimeout( identifyUser, 0, user );
+  
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.ADMIN ), setAdminNavLinks );
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.MEMBER ), setMemberNavLinks );
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.NONMEMBER ), signOutNonMember );
   queueAdminStatusDependentFunction( ( 1 << userAdminStates.NONAUTH ), setLinksForNullAuthUsers );
 
+  queueAdminStatusDependentFunction( ( ~( 1 << userAdminStates.NONAUTH ) ), setSignInButtonForUser );
 
   if( user ) {
 
     console.log( "Current User:" );
     console.log( user );
-
-    $( ".sign-in-button-text" ).text( emailToUsername( user.email ) );
-    $( ".sign-in-button" ).click( function() {
-      alert( user.displayName + " already signed in." );
-    } );
-    setRedirectResultCallback();
 
   } else {
 
