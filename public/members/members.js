@@ -1,3 +1,17 @@
+/*****************************************************************************
+ * 
+ * File: 
+ *   /js/main.js
+ *
+ * Original Author:
+ *   Grant Broadwater
+ *
+ * Description:
+ *   Main functionality for all webpages in the beta sig markup project.
+ *
+ *****************************************************************************/
+
+/* Indicate page is loading */
 var memberLoadingProcessKey = "MemberPage";
 startLoadingProcess( memberLoadingProcessKey );
 
@@ -18,6 +32,7 @@ var documentReady = function() {
 
 }
 $( document ).ready( documentReady );
+
 
 /*****************************************************************************
  * 
@@ -43,6 +58,7 @@ var loadContent = function( currentUser ) {
 
 }
 queueAdminStatusDependentFunction( ( 1 << userAdminStates.ADMIN ), loadContent );
+
 
 /*****************************************************************************
  * 
@@ -198,6 +214,7 @@ var changeAdminStatus = function( memberContext ) {
 
 }
 
+
 /*****************************************************************************
  * 
  * Function:
@@ -230,6 +247,7 @@ var clearMemberHandler = function( memberContext ) {
 
   location.reload();
 } 
+
 
 /*****************************************************************************
  * 
