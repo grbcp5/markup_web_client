@@ -1,3 +1,83 @@
+
+
+var addProductsHandler = function() {
+
+  var barcodeNumber = prompt( "Barcode Number: " );
+
+  if( barcodeNumber == null ) {
+    location.reload();
+    return;
+  }
+
+  productPath = "/markup/products/" + barcodeNumber;
+  productRef = ref.child( productPath );
+  productRef.once( "value", function( productSnap ) {
+
+    var changes = {};
+
+    if( productSnap.exists() ) {
+      changes[ productPath + "/quantity" ]  = productSnap.val().quantity + 1;
+    } else {
+
+      var addNewItem = confirm( "This item is not currently in the database.\n\nWould you like to add it now?" );
+      if( !addNewItem ) {
+        this.skip = true;
+        return;
+      }
+
+      var newItemDescription = prompt( "Enter a description of the item:" );
+      if( newItemDescription == null ) {
+        this.skip = true;
+        return;
+      }
+
+      var newItemPrice = prompt( "Enter the price of the new item:" );
+      if( newItemPrice == null ) {
+        this.skip = true;
+        return;
+      }
+
+      var newItem = {
+        "description": newItemDescription,
+        "price": newItemPrice,
+        "barcodeNumber": barcodeNumber,
+        "quantity": 1
+      }
+      changes[ productPath ] = newItem;
+
+    }
+
+    ref.update( changes );
+
+  } ).then( function( productSnap ) {
+
+    if( this.skip )
+      return;
+
+    addProductsHandler();
+
+  } );
+
+}
+
+
+var deleteProductHandler = function( item ) {
+
+  var shouldDelete = confirm( "Are you sure you want to remove all '" + item.description + "' records from the database?" );
+
+  if( !shouldDelete )
+    return;
+
+  var changes = {};
+
+  changes[ "/markup/products/" + item.barcodeNumber ] = null;
+
+  ref.update( changes );
+  location.reload();
+
+}
+
+
 var populateProductsList = function( currentUser ) {
 
 	var productsPath = "/markup/products";
@@ -35,10 +115,15 @@ var populateProductsList = function( currentUser ) {
       $productDiv.insertBefore( $( "#productsPlaceholder" ) );
       if( currentUser.adminStatus !== userAdminStates.ADMIN )
         $( "#" + item.clearID ).hide();
+      else {
+        $( "#" + item.clearID ).click(  function() { deleteProductHandler( item ) } );
+      }
 
     } );		
 
 	} );
+
+  $( "#add-products-button" ).click( addProductsHandler );
 
 }
 queueAdminStatusDependentFunction( ( ( 1 << userAdminStates.ADMIN ) | ( 1 << userAdminStates.MEMBER ) ), populateProductsList );
