@@ -323,7 +323,6 @@ var populateMemberList = function( currentUser ) {
 
     } );
 
-
   } ); 
 
   terminateLoadingProcess( memberLoadingProcessKey );
