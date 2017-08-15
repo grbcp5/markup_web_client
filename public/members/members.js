@@ -22,48 +22,52 @@ $( document ).ready( documentReady );
 /*****************************************************************************
  * 
  * Function:
- *   onFirebaseAuthStateChanged
+ *   loadContent
  * 
  * Parameters:
- *   user - Currently authenticated user (or null).
+ *   currentUser = {
+ *     username - Current User's username
+ *     adminStatus - Current User's admin status
+ *     authValue - the auth object provided by firebase
+ *   }
  * 
  * Description:
- *   Dynamically adjusts the web page depending on the current user.
+ *   Loads all the members.
  * 
  *****************************************************************************/
 
- var onFirebaseAuthStateChanged_MembersPage = function( user ) {
+var loadContent = function( currentUser ) {
 
-  if( user ) {
-
-    var userUsername = emailToUsername( user.email );
-    var userAdminPath = "/markup/admin/" + userUsername;
-    var userAdminRef = ref.child( userAdminPath );
-    userAdminRef.once( "value", function( userAdminSnap ) {
-
-      /* If user is admin */
-      if( userAdminSnap.exists() ) {
-
-        populateMemberList( user );
-        $( "#loading-screen" ).hide();
-        $( "#add-member-button" ).click( addMemberButtonHandler );
-
-      } else { /* User is not an admin */
-        alert( "You must be a markup admin to manage registered members." );
-        window.location.replace( "/" );
-      }
-
-    } );
-
-  } else {
-
-    alert( "You must be a markup admin to manage registered members." );
-    window.location.replace( "/" );
-
-  }
+  populateMemberList( currentUser.authValue );
+  $( "#add-member-button" ).click( addMemberButtonHandler );
 
 }
-firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged_MembersPage );
+queueAdminStatusDependentFunction( ( 1 << userAdminStates.ADMIN ), loadContent );
+
+/*****************************************************************************
+ * 
+ * Function:
+ *   bootNonAdmin
+ * 
+ * Parameters:
+ *   currentUser = {
+ *     username - Current User's username
+ *     adminStatus - Current User's admin status
+ *     authValue - the auth object provided by firebase
+ *   }
+ * 
+ * Description:
+ *   Alerts and redirects all users who are not administrators.
+ * 
+ *****************************************************************************/
+
+var bootNonAdmin = function( currentUser ) {
+
+  alert( "You must be a markup admin to manage registered members." );
+  window.location.replace( "/" );
+
+}
+queueAdminStatusDependentFunction( ~( 1 << userAdminStates.ADMIN ), bootNonAdmin );
 
 
 /*****************************************************************************
@@ -252,8 +256,6 @@ var populateMemberList = function( currentUser ) {
       if( memberSnap.key === "usernames" ) {
         return;
       }
-
-      //alert( "Member: " + memberSnap.val().school.id );
       
       var memberContext = {
         username: memberSnap.val().school.username,
