@@ -1,6 +1,9 @@
 
 
-var addProductsHandler = function() {
+var addProductsHandler = function( currentUser ) {
+
+  if( currentUser.adminStatus !== userAdminStates.ADMIN )
+    return;
 
   var barcodeNumber = prompt( "Barcode Number: " );
 
@@ -113,9 +116,10 @@ var populateProductsList = function( currentUser ) {
       } );
 
       $productDiv.insertBefore( $( "#productsPlaceholder" ) );
-      if( currentUser.adminStatus !== userAdminStates.ADMIN )
+      if( currentUser.adminStatus !== userAdminStates.ADMIN ) {
         $( "#" + item.clearID ).hide();
-      else {
+        $( "#add-products-button" ).hide();
+      } else {
         $( "#" + item.clearID ).click(  function() { deleteProductHandler( item ) } );
       }
 
@@ -123,7 +127,9 @@ var populateProductsList = function( currentUser ) {
 
 	} );
 
-  $( "#add-products-button" ).click( addProductsHandler );
+  $( "#add-products-button" ).click( function() {
+    queueAdminStatusDependentFunction( ( 1 << userAdminStates.ADMIN ), addProductsHandler ); 
+  } );
 
 }
 queueAdminStatusDependentFunction( ( ( 1 << userAdminStates.ADMIN ) | ( 1 << userAdminStates.MEMBER ) ), populateProductsList );
