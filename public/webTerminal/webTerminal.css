@@ -1,0 +1,13 @@
+#complete-transaction-button {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+}
+
+#clear-transaction-button {
+  width: 100%;
+}
+
+.material-icons {
+  padding-right: 10px;
+}

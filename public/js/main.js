@@ -122,7 +122,7 @@ var setRedirectResultCallback = function() {
  * 
  *****************************************************************************/
 
-var getUserRefForID = function( student_id, callback ) {
+var getUserRefForID = function( student_id, callback, failureCallback ) {
 
   var idPath = "/members/usernames/" + student_id;
   var idRef = ref.child( idPath );
@@ -130,9 +130,13 @@ var getUserRefForID = function( student_id, callback ) {
 
     username = snap.val();
     if( username ) {
+
       usernamePath = "/members/" + username;
       usernameRef = ref.child( usernamePath );
       usernameRef.once( "value", callback );
+
+    } else {
+      failureCallback();
     }
 
   } );

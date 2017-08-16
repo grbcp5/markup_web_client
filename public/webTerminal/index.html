@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="./webTerminal.css">
 
 </head>
 <body>
@@ -48,7 +49,66 @@
         <div class="mdl-spinner mdl-js-spinner is-active"></div>
       </div>
       
-      <h2>Terminal</h2>
+      <div class="mdl-grid">
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container direct-content-cell">
+            <i class="material-icons">account_box</i>Member
+          </div>
+        </div>
+
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container direct-content-cell">
+            
+            <div class="text-field-container">
+              <div class="mdl-textfield mdl-js-textfield" id="studentIDTextField">
+                <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="studentID">
+                <label class="mdl-textfield__label" for="studentID">Student ID...</label>
+                <span class="mdl-textfield__error">Input is not a number!</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container direct-content-cell">
+            <i class="material-icons">shopping_cart</i>Cart
+          </div>
+        </div>
+
+        <div id="itemPlaceholder"></div>
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container direct-content-cell">
+            <div class="text-field-container">
+              <div class="mdl-textfield mdl-js-textfield" id="addItemTextField">
+                <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="addItem">
+                <label class="mdl-textfield__label" for="addItem">Add Item...</label>
+                <span class="mdl-textfield__error">Input is not a number!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="complete-transaction-button">
+              Complete Transaction
+            </button>
+          </div>
+        </div>
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="clear-transaction-button">
+              Clear Transaction
+            </button>
+          </div>
+        </div>
+
+      </div>
 
     </div>
   </main>
