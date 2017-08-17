@@ -28,13 +28,13 @@ var addProductsHandler = function( currentUser ) {
         return;
       }
 
-      var newItemDescription = prompt( "Enter a description of the item:" );
+      var newItemDescription = pareprompt( "Enter a description of the item:" );
       if( newItemDescription == null ) {
         this.skip = true;
         return;
       }
 
-      var newItemPrice = prompt( "Enter the price of the new item:" );
+      var newItemPrice = parseInt( prompt( "Enter the price of the new item:" ) );
       if( newItemPrice == null ) {
         this.skip = true;
         return;
