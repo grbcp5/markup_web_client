@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Markup</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- MDL io -->
+  <link rel="stylesheet" href="/css/material.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <link rel="stylesheet" href="/css/main.css">
+
+</head>
+<body>
+  
+<!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title"><a href="/" class="homeLink">Markup</a></span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. -->
+      <nav class="mdl-navigation">
+      
+        <!-- Accent-colored raised button with ripple -->
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent sign-in-button">
+          <i class="material-icons">fingerprint</i><span class="sign-in-button-text"></span>
+        </button>
+  
+      </nav>
+    </div>
+  </header>
+  <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title"><a href="/" class="homeLink">Markup</a></span>
+    <nav class="mdl-navigation">
+      <div id="nav-links">
+      </div>
+    </nav>
+  </div>
+  <main class="mdl-layout__content">
+    <div class="page-content">
+      <!-- Your content goes here -->
+      <div id="loading-screen">
+        <!-- MDL Spinner Component -->
+        <div class="mdl-spinner mdl-js-spinner is-active"></div>
+      </div>
+
+      <h2>Transactions</h2>
+      
+    </div>
+  </main>
+</div>
+
+<!-- Scripts -->
+<script src="https://www.gstatic.com/firebasejs/4.1.5/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyA7mztUDkkvJ_9_ikfLk9Mu7Oqhv3T1JOA",
+    authDomain: "betasig-d4b96.firebaseapp.com",
+    databaseURL: "https://betasig-d4b96.firebaseio.com",
+    projectId: "betasig-d4b96",
+    storageBucket: "betasig-d4b96.appspot.com",
+    messagingSenderId: "1054493102086"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="/js/material.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<div id="other_scripts"></div>
+<script src="/js/main.js" ></script>
+<script src="./transactions.js"></script>
+
+</body>
+</html>

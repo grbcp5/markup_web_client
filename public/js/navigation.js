@@ -57,7 +57,7 @@ var setAdminNavLinks = function( user ) {
   $( "#nav-links" ).append( viewProductsLink );
   var viewTransLink = $( "<a class='mdl-navigation__link' href='/transactions/'>Transactions</a>" );
   $( "#nav-links" ).append( viewTransLink );
-  var launchTerminalLink = $( "<a class='mdl-navigation__link' href='/webTerminal/'>Launch Terminal</a>" );
+  var launchTerminalLink = $( "<a class='mdl-navigation__link' href='/webTerminal/'>Web Terminal</a>" );
   $( "#nav-links" ).append( launchTerminalLink );
   var signOutButton = $( '<div class="button-container"><a class="mdl-navigation__link"><button class="sign-out-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"><i class="material-icons">fingerprint</i><span class="sign-out-button-text">Sign Out</span></button></a></div>' );
   signOutButton.click( function() {
