@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="./transactions.css">
 
 </head>
 <body>
@@ -48,7 +49,19 @@
         <div class="mdl-spinner mdl-js-spinner is-active"></div>
       </div>
 
-      <h2>Transactions</h2>
+      <div class="mdl-grid">
+
+        <div id="memberTotalPlaceholder"></div>
+
+        <div class="mdl-cell mdl-cell--6-col">
+          <div class="cell-container">
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="clear-transactions-button">
+              Clear Transactions
+            </button>
+          </div>
+        </div>
+
+      </div>
       
     </div>
   </main>
