@@ -1,13 +1,13 @@
 /*****************************************************************************
  * 
- * File: 
+ * @File:
  *   /js/main.js
  *
- * Original Author:
+ * @Author:
  *   Grant Broadwater
  *
- * Description:
- *   Main functionality for all webpages in the beta sig markup project.
+ * @Description:
+ *   Main functionality for all web pages in the beta sig markup project.
  *
  *****************************************************************************/
 
@@ -29,26 +29,28 @@ provider.setCustomParameters( {
  * Parameters:
  *   none
  * 
- * Description:
+ * @Description:
  *   Loads all necisary scripts.
  * 
  *****************************************************************************/
 
 var loadOtherScripts = function() {
 
-  $loading = $( '<script src="/js/loading.js"></script>' );
-  $loading.insertBefore( $( '#other_scripts' ) );
+  var $otherScripts = $( '#other_scripts' );
 
-  $support = $( '<script src="/js/support.js"></script>' );
-  $support.insertBefore( $( '#other_scripts' ) );
-  
-  $adminStatusDependentFramework = $( '<script src="/js/adminStatusDependentFramework.js"></script>' );
-  $adminStatusDependentFramework.insertBefore( $( '#other_scripts' ) );
+  var $loading = $( '<script src="/js/loading.js"></script>' );
+  $loading.insertBefore( $otherScripts );
 
-  $navigation = $( '<script src="/js/navigation.js"></script>' );
-  $navigation.insertBefore( $( '#other_scripts' ) );
+  var $support = $( '<script src="/js/support.js"></script>' );
+  $support.insertBefore( $otherScripts );
 
-}
+  var $adminStatusDependentFramework = $( '<script src="/js/adminStatusDependentFramework.js"></script>' );
+  $adminStatusDependentFramework.insertBefore( $otherScripts );
+
+  var $navigation = $( '<script src="/js/navigation.js"></script>' );
+  $navigation.insertBefore( $otherScripts );
+
+};
 loadOtherScripts();
 
 
@@ -61,9 +63,11 @@ startLoadingProcess( adminIdentificationLoadingProcessKey );
  *   redirectResultCallback
  * 
  * Parameters:
- *   result - The result of the Sign-In Redirect.
+ *   @param result              The result of the Sign-In Redirect.
+ *   @param result.credential   Any credentials returned from the redirect
+ *   @param result.user         The user that was returned from the redirect
  * 
- * Description:
+ * @Description:
  *   Logs the credentials and the user (if they exist) as a result of the 
  *   sign-in redirect.
  *
@@ -81,7 +85,7 @@ var redirectResultCallback = function( result ) {
     console.log( result.user );
   }
 
-}
+};
 
 
 /*****************************************************************************
@@ -92,7 +96,7 @@ var redirectResultCallback = function( result ) {
  * Parameters:
  *   none
  * 
- * Description:
+ * @Description::
  *   Sets the Sign-In Redirect callback.
  * 
  *****************************************************************************/
@@ -103,7 +107,7 @@ var setRedirectResultCallback = function() {
 
   firebase.auth().getRedirectResult().then( redirectResultCallback ); 
 
-}
+};
 
 
 /*****************************************************************************
@@ -112,10 +116,10 @@ var setRedirectResultCallback = function() {
  *   getUserRefForID
  * 
  * Parameters:
- *   student_id - student id for a member.
- *   callback   - called with snapshot of user's context within the database.
+ *   @param student_id - student id for a member.
+ *   @param callback   - called with snapshot of user's context within the database.
  * 
- * Description:
+ * @Description::
  *   Calls callback with user's context within the database. This function is 
  *   useful as the users key in the database is their username not their 
  *   student id.
@@ -128,11 +132,11 @@ var getUserRefForID = function( student_id, callback, failureCallback ) {
   var idRef = ref.child( idPath );
   idRef.once( "value", function( snap ) {
 
-    username = snap.val();
+    var username = snap.val();
     if( username ) {
 
-      usernamePath = "/members/" + username;
-      usernameRef = ref.child( usernamePath );
+      var usernamePath = "/members/" + username;
+      var usernameRef = ref.child( usernamePath );
       usernameRef.once( "value", callback );
 
     } else {
@@ -141,7 +145,7 @@ var getUserRefForID = function( student_id, callback, failureCallback ) {
 
   } );
 
-}
+};
 
 
 /*****************************************************************************
@@ -152,14 +156,14 @@ var getUserRefForID = function( student_id, callback, failureCallback ) {
  * Parameters:
  *   none
  * 
- * Description:
+ * @Description::
  *   Callback for when the document is fully loaded.
  * 
  *****************************************************************************/
 
 var documentReady = function() {
 
-}
+};
 $( document ).ready( documentReady );
 
 
@@ -171,7 +175,7 @@ $( document ).ready( documentReady );
  * Parameters:
  *   user - Currently authenticated user (or null).
  * 
- * Description:
+ * @Description::
  *   Dynamically adjusts the web page depending on the current user.
  * 
  *****************************************************************************/
@@ -184,5 +188,5 @@ $( document ).ready( documentReady );
   /* Identify the current user */
   identifyUser( user );
 
-}
+};
 firebase.auth().onAuthStateChanged( onFirebaseAuthStateChanged );
