@@ -14,18 +14,19 @@ function Cart() {
 
   this.completeTransaction = function() {
     
+    /* Bail if not enough info to make a transaction */
     if( purchasingUser == null || itemsInCart.length === 0 ) {
       alert( "Cannot complete transaction" );
       return;
     }
 
-    var changes = {};
-
+    /* DB variables */
     var transactionsPath = "/markup/transactions";
     var transactionsRef = ref.child( transactionsPath );
-
     var userTransactionsPath = "/members/" + purchasingUser.school.username + "/markup/transactions";
+    var changes = {};
 
+    /* Prepare all database changes */
     var descriptionString = "Member:\n   " + purchasingUser.name.first + " " + purchasingUser.name.last + "\nCart:";
     for( var i = 0; i < itemsInCart.length; i++ ) {
       descriptionString += "\n   " + itemsInCart[ i ].description;
@@ -41,13 +42,25 @@ function Cart() {
 
     }
 
+    /* Give user chance to bail */
     var shouldComplete = confirm( 
       descriptionString + 
-      "\n\nAre you sure you want to complete this transaction?" );
+      "\n\nAre you sure you want to complete this transaction?" 
+    );
 
     if( !shouldComplete )
       return;
 
+    // TODO: Make less DB calls
+    for( var i = 0; i < itemsInCart.length; i++ ) {
+      var itemQuantityPath = "/markup/products/" + itemsInCart[ i ].barcodeNumber + "/quantity";
+      var itemQuantityRef = ref.child( itemQuantityPath );
+      itemQuantityRef.transaction( function ( current_value ) {
+        return ( current_value || 0 ) - 1;
+      } );
+    }
+
+    // Send Updates
     ref.update( changes )
     location.reload();
 
@@ -115,6 +128,10 @@ function InputHandler() {
 
       if( input == "" )
         return;
+
+      if( input.substring( 0, 1 ) == ";" ) {
+        input = input.substring( 2, 10 );
+      }
 
       setUser( input );
       recievedStudentID = true;
