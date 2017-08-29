@@ -6,10 +6,24 @@ var addProductsHandler = function( currentUser ) {
     return;
 
   var barcodeNumber = prompt( "Barcode Number: " );
+  var count = 1;
 
   if( barcodeNumber == null ) {
     location.reload();
     return;
+  }
+
+  var xIndex = barcodeNumber.indexOf( "x" );
+  if( xIndex !== -1 ) {
+    var pieces = barcodeNumber.split( "x" );
+
+    barcodeNumber = pieces[ 1 ];
+    count = parseInt( pieces[ 0 ] );
+
+    if( pieces[ 0 ].length > pieces[ 1 ].length ) {
+      barcodeNumber = pieces[ 0 ];
+      count = parseInt( pieces[ 1 ] );
+    }
   }
 
   productPath = "/markup/products/" + barcodeNumber;
@@ -19,7 +33,7 @@ var addProductsHandler = function( currentUser ) {
     var changes = {};
 
     if( productSnap.exists() ) {
-      changes[ productPath + "/quantity" ]  = productSnap.val().quantity + 1;
+      changes[ productPath + "/quantity" ]  = productSnap.val().quantity + count;
     } else {
 
       var addNewItem = confirm( "This item is not currently in the database.\n\nWould you like to add it now?" );
