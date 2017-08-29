@@ -57,7 +57,7 @@ var addProductsHandler = function( currentUser ) {
     if( this.skip )
       return;
 
-    addProductsHandler();
+    queueAdminStatusDependentFunction( ( 1 << userAdminStates.ADMIN ), addProductsHandler );
 
   } );
 
